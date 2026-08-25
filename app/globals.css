@@ -2,14 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Light theme (default) */
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
+  --color-ink: 247 248 252;
+  --color-surface: 255 255 255;
+  --color-surface-2: 228 232 242;
+  --color-cloud: 16 24 39;
+  --color-muted: 91 100 120;
+  --color-amber: 180 83 9;
+  --color-signal: 16 185 129;
+}
+
+/* Dark theme */
+.dark {
+  --color-ink: 11 17 32;
+  --color-surface: 19 27 46;
+  --color-surface-2: 27 37 64;
+  --color-cloud: 244 246 251;
+  --color-muted: 147 160 189;
+  --color-amber: 255 180 84;
+  --color-signal: 52 211 153;
+}
+
+/* Constants: don't change with theme (e.g. text sitting on a fixed-color badge/button) */
+:root {
+  --color-amber-solid: 255 180 84;
+  --color-ink-solid: 11 17 32;
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  color: rgb(var(--color-cloud));
+  background: rgb(var(--color-ink));
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 

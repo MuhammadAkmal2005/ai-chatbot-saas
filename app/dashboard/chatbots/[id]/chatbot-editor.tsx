@@ -21,8 +21,8 @@ export function ChatbotEditor({ chatbot }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const embedCode = `<script src="https://YOUR_DOMAIN.vercel.app/widget.js" data-widget-key="${chatbot.widget_key}"></script>`;
-
+  // const embedCode = `<script src=${process.env.NEXT_PUBLIC_SITE_URL}/widget.js data-widget-key="${chatbot.widget_key}"></script>`;
+  const embedCode = `<script src="http://localhost:3000/widget.js" data-widget-key="2fa28c3a-4ef4-4dd4-b40e-4f818756de9d"></script>`;
   async function handleSave(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
