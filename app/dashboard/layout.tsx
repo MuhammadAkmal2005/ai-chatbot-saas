@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Bot, LayoutDashboard, Settings, Users } from "lucide-react";
 import { LogoutButton } from "./logout-button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -15,17 +16,20 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <aside className="flex w-64 flex-col border-r border-slate-200 bg-white p-4">
-        <Link href="/dashboard" className="px-3 py-2 text-lg font-semibold text-indigo-600">
-          Chatbot SaaS
-        </Link>
+    <div className="flex min-h-screen bg-ink text-cloud">
+      <aside className="flex w-64 flex-col border-r border-surface-2 bg-surface p-4">
+        <div className="flex items-center justify-between px-3 py-2">
+          <Link href="/dashboard" className="font-display text-lg text-cloud">
+            Chatbot SaaS
+          </Link>
+          <ThemeToggle />
+        </div>
         <nav className="mt-6 flex flex-1 flex-col gap-1">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700"
+              className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-muted hover:bg-surface-2 hover:text-cloud"
             >
               <item.icon className="h-4 w-4" />
               {item.label}

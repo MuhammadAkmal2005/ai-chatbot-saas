@@ -43,8 +43,8 @@ export default async function LeadsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-slate-900">Leads</h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <h1 className="font-display text-2xl text-cloud">Leads</h1>
+      <p className="mt-1 text-sm text-muted">
         Everyone captured across your chatbots.
       </p>
       <LeadsTable leads={leads} />

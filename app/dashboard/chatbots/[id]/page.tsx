@@ -35,11 +35,11 @@ export default async function ChatbotEditorPage({ params }: Props) {
 
   return (
     <div>
-      <Link href="/dashboard" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+      <Link href="/dashboard" className="text-sm font-medium text-amber hover:brightness-110">
         ← Back to dashboard
       </Link>
-      <h1 className="mt-3 text-2xl font-semibold text-slate-900">{chatbot.name}</h1>
-      <p className="mt-1 mb-6 text-sm text-slate-600">
+      <h1 className="mt-3 font-display text-2xl text-cloud">{chatbot.name}</h1>
+      <p className="mt-1 mb-6 text-sm text-muted">
         Customize how your chatbot looks and what it says.
       </p>
       <ChatbotEditor chatbot={chatbot} />

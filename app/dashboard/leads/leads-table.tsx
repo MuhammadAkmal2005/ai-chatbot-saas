@@ -32,16 +32,16 @@ export function LeadsTable({ leads }: Props) {
   }
 
   return (
-    <div className="mt-6 rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
-        <p className="text-sm text-slate-600">
+    <div className="mt-6 rounded-xl border border-surface-2 bg-surface shadow-sm">
+      <div className="flex items-center justify-between border-b border-surface-2 px-4 py-3">
+        <p className="text-sm text-muted">
           {leads.length} {leads.length === 1 ? "lead" : "leads"}
         </p>
         <button
           type="button"
           onClick={exportCsv}
           disabled={leads.length === 0}
-          className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          className="inline-flex items-center gap-2 rounded-xl border border-surface-2 px-3 py-1.5 text-sm font-medium text-cloud hover:bg-surface-2 disabled:opacity-50"
         >
           <Download className="h-4 w-4" />
           Export CSV
@@ -49,7 +49,7 @@ export function LeadsTable({ leads }: Props) {
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
-          <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          <thead className="bg-surface-2/40 text-xs font-semibold uppercase tracking-wide text-muted">
             <tr>
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Email</th>
@@ -61,18 +61,18 @@ export function LeadsTable({ leads }: Props) {
           <tbody>
             {leads.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-12 text-center text-muted">
                   No leads captured yet.
                 </td>
               </tr>
             ) : (
               leads.map((lead) => (
-                <tr key={lead.id} className="border-t border-slate-100">
-                  <td className="px-4 py-3 text-slate-900">{lead.name || "—"}</td>
-                  <td className="px-4 py-3 text-slate-700">{lead.email || "—"}</td>
-                  <td className="px-4 py-3 text-slate-700">{lead.phone || "—"}</td>
-                  <td className="px-4 py-3 text-slate-700">{lead.chatbot_name}</td>
-                  <td className="px-4 py-3 text-slate-700">
+                <tr key={lead.id} className="border-t border-surface-2">
+                  <td className="px-4 py-3 text-cloud">{lead.name || "—"}</td>
+                  <td className="px-4 py-3 text-muted">{lead.email || "—"}</td>
+                  <td className="px-4 py-3 text-muted">{lead.phone || "—"}</td>
+                  <td className="px-4 py-3 text-muted">{lead.chatbot_name}</td>
+                  <td className="px-4 py-3 text-muted">
                     {formatDate(lead.created_at)}
                   </td>
                 </tr>

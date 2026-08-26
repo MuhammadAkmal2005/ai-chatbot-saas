@@ -70,10 +70,10 @@ export function ChatbotEditor({ chatbot }: Props) {
     <div className="grid gap-6 xl:grid-cols-2">
       <form
         onSubmit={handleSave}
-        className="space-y-5 rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+        className="space-y-5 rounded-xl border border-surface-2 bg-surface p-6 shadow-sm"
       >
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="name" className="block text-sm font-medium text-cloud">
             Chatbot Name
           </label>
           <input
@@ -82,12 +82,12 @@ export function ChatbotEditor({ chatbot }: Props) {
             required
             value={name}
             onChange={(event) => setName(event.target.value)}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-600"
+            className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
           />
         </div>
 
         <div>
-          <label htmlFor="welcome" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="welcome" className="block text-sm font-medium text-cloud">
             Welcome Message
           </label>
           <textarea
@@ -95,12 +95,12 @@ export function ChatbotEditor({ chatbot }: Props) {
             rows={3}
             value={welcomeMessage}
             onChange={(event) => setWelcomeMessage(event.target.value)}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-600"
+            className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
           />
         </div>
 
         <div>
-          <label htmlFor="prompt" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="prompt" className="block text-sm font-medium text-cloud">
             AI Instructions — tell the AI how to behave, e.g. &apos;You are a support
             agent for [business]. Be friendly and try to collect the visitor&apos;s email
             if they ask a question you can&apos;t answer.&apos;
@@ -110,12 +110,12 @@ export function ChatbotEditor({ chatbot }: Props) {
             rows={6}
             value={systemPrompt}
             onChange={(event) => setSystemPrompt(event.target.value)}
-            className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-600"
+            className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
           />
         </div>
 
         <div>
-          <label htmlFor="color" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="color" className="block text-sm font-medium text-cloud">
             Primary Color
           </label>
           <div className="mt-1 flex items-center gap-3">
@@ -124,36 +124,36 @@ export function ChatbotEditor({ chatbot }: Props) {
               type="color"
               value={normalizeHex(primaryColor)}
               onChange={(event) => setPrimaryColor(event.target.value)}
-              className="h-10 w-14 cursor-pointer rounded-xl border border-slate-300 bg-white p-1"
+              className="h-10 w-14 cursor-pointer rounded-xl border border-surface-2 bg-surface p-1"
             />
             <input
               type="text"
               value={primaryColor}
               onChange={(event) => setPrimaryColor(event.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-600"
+              className="w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
             />
           </div>
         </div>
 
         <div>
-          <label htmlFor="position" className="block text-sm font-medium text-slate-700">
+          <label htmlFor="position" className="block text-sm font-medium text-cloud">
             Position
           </label>
           <select
             id="position"
             value={position}
             onChange={(event) => setPosition(event.target.value as ChatbotPosition)}
-            className="mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-indigo-600"
+            className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
           >
             <option value="bottom-right">Bottom right</option>
             <option value="bottom-left">Bottom left</option>
           </select>
         </div>
 
-        <div className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-3">
+        <div className="flex items-center justify-between rounded-xl border border-surface-2 px-3 py-3">
           <div>
-            <p className="text-sm font-medium text-slate-900">Active</p>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm font-medium text-cloud">Active</p>
+            <p className="text-xs text-muted">
               Inactive chatbots will not appear on your website.
             </p>
           </div>
@@ -163,7 +163,7 @@ export function ChatbotEditor({ chatbot }: Props) {
             aria-checked={isActive}
             onClick={() => setIsActive((value) => !value)}
             className={`relative h-6 w-11 rounded-full transition ${
-              isActive ? "bg-indigo-600" : "bg-slate-300"
+              isActive ? "bg-amber-solid" : "bg-surface-2"
             }`}
           >
             <span
@@ -175,13 +175,13 @@ export function ChatbotEditor({ chatbot }: Props) {
         </div>
 
         {error && (
-          <p className="text-sm text-red-600" role="alert">
+          <p className="text-sm text-red-500" role="alert">
             {error}
           </p>
         )}
 
         {saved && (
-          <p className="rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p className="rounded-xl bg-signal/10 px-3 py-2 text-sm text-signal">
             Changes saved.
           </p>
         )}
@@ -189,20 +189,23 @@ export function ChatbotEditor({ chatbot }: Props) {
         <button
           type="submit"
           disabled={saving}
-          className="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60"
+          className="w-full rounded-xl bg-amber-solid px-4 py-2.5 text-sm font-semibold text-ink-solid hover:brightness-95 disabled:opacity-60"
         >
           {saving ? "Saving..." : "Save Changes"}
         </button>
       </form>
 
       <div className="space-y-6">
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-semibold text-slate-900">Live preview</h2>
-          <p className="mt-1 text-xs text-slate-500">
+        <div className="rounded-xl border border-surface-2 bg-surface p-6 shadow-sm">
+          <h2 className="text-sm font-semibold text-cloud">Live preview</h2>
+          <p className="mt-1 text-xs text-muted">
             Updates as you edit. This is a visual mockup — it does not call the AI.
           </p>
 
-          <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
+          {/* Deliberately fixed light colors below: this simulates what a
+              visitor sees on the customer's own website, which is independent
+              of this dashboard's theme. */}
+          <div className="mt-4 overflow-hidden rounded-xl border border-surface-2 bg-slate-100">
             <div className={`flex min-h-[420px] flex-col justify-end p-4 ${previewAlign}`}>
               <div className="mb-3 w-full max-w-[280px] overflow-hidden rounded-xl bg-white shadow-sm">
                 <div
@@ -232,22 +235,22 @@ export function ChatbotEditor({ chatbot }: Props) {
           </div>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="rounded-xl border border-surface-2 bg-surface p-6 shadow-sm">
           <div className="flex items-center justify-between gap-3">
-            <h2 className="text-sm font-semibold text-slate-900">Embed Code</h2>
+            <h2 className="text-sm font-semibold text-cloud">Embed Code</h2>
             <button
               type="button"
               onClick={copyEmbedCode}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-surface-2 px-3 py-1.5 text-xs font-medium text-cloud hover:bg-surface-2"
             >
               {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? "Copied" : "Copy Code"}
             </button>
           </div>
-          <pre className="mt-3 overflow-x-auto rounded-xl bg-slate-900 p-4 text-xs text-slate-100">
+          <pre className="mt-3 overflow-x-auto rounded-xl border border-surface-2 bg-ink p-4 font-mono text-xs text-muted">
             {embedCode}
           </pre>
-          <p className="mt-3 text-xs text-slate-500">
+          <p className="mt-3 text-xs text-muted">
             Paste this snippet before the closing {`</body>`} tag on your website
           </p>
         </div>
