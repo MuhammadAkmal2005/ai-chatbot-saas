@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { FREE_MONTHLY_MESSAGE_LIMIT, getMonthlyMessageCount } from "@/lib/usage";
 import { ChangePasswordForm } from "./change-password-form";
 import { UpgradeButton } from "./upgrade-button";
 
@@ -24,6 +25,7 @@ export default async function SettingsPage({
     .maybeSingle();
 
   const plan = subscription?.plan === "pro" ? "Pro" : "Free";
+  const monthlyUsage = plan === "Free" ? await getMonthlyMessageCount(supabase, user.id) : null;
 
   return (
     <div className="max-w-2xl">
@@ -64,6 +66,37 @@ export default async function SettingsPage({
         </p>
         <ChangePasswordForm email={user.email ?? ""} />
       </section>
+
+      {plan === "Free" && monthlyUsage !== null && (
+        <section className="mt-6 rounded-xl border border-surface-2 bg-surface p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-lg text-cloud">Usage this month</h2>
+            <span className="text-sm text-muted">
+              {Math.min(monthlyUsage, FREE_MONTHLY_MESSAGE_LIMIT)} /{" "}
+              {FREE_MONTHLY_MESSAGE_LIMIT} messages
+            </span>
+          </div>
+          <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-2">
+            <div
+              className={`h-full rounded-full ${
+                monthlyUsage >= FREE_MONTHLY_MESSAGE_LIMIT ? "bg-red-500" : "bg-amber-solid"
+              }`}
+              style={{
+                width: `${Math.min(
+                  100,
+                  (monthlyUsage / FREE_MONTHLY_MESSAGE_LIMIT) * 100
+                )}%`,
+              }}
+            />
+          </div>
+          {monthlyUsage >= FREE_MONTHLY_MESSAGE_LIMIT && (
+            <p className="mt-2 text-sm text-red-500">
+              You&apos;ve hit your free monthly limit. Your chatbots won&apos;t
+              respond until next month unless you upgrade.
+            </p>
+          )}
+        </section>
+      )}
 
       <section className="mt-6 rounded-xl border border-surface-2 bg-surface p-6">
         <h2 className="font-display text-lg text-cloud">Billing</h2>

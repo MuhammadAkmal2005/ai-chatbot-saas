@@ -1,43 +1,11 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { MarketingHeader } from "@/components/marketing-header";
+import { MarketingFooter } from "@/components/marketing-footer";
 
 export default function Home() {
   return (
     <div className="bg-ink text-cloud">
-      {/* Header */}
-      <header className="sticky top-0 z-20 border-b border-surface-2 bg-ink/80 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <span className="font-display text-lg tracking-tight text-cloud">
-            Chatbot SaaS
-          </span>
-          <nav className="hidden items-center gap-8 text-sm text-muted md:flex">
-            <a href="#features" className="hover:text-cloud focus-visible:text-cloud focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded">
-              Features
-            </a>
-            <a href="#how-it-works" className="hover:text-cloud focus-visible:text-cloud focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded">
-              How it works
-            </a>
-            <a href="#pricing" className="hover:text-cloud focus-visible:text-cloud focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded">
-              Pricing
-            </a>
-          </nav>
-          <div className="flex items-center gap-4">
-            <ThemeToggle />
-            <Link
-              href="/login"
-              className="text-sm text-muted hover:text-cloud focus-visible:text-cloud focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber rounded"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="rounded-full bg-amber-solid px-4 py-2 text-sm font-medium text-ink-solid hover:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
-            >
-              Get Started Free
-            </Link>
-          </div>
-        </div>
-      </header>
+      <MarketingHeader />
 
       {/* Hero */}
       <section className="mx-auto grid max-w-6xl gap-16 px-6 py-20 md:grid-cols-2 md:items-center md:py-28">
@@ -218,7 +186,7 @@ export default function Home() {
               <p className="mt-1 font-display text-3xl text-cloud">$0</p>
               <ul className="mt-4 space-y-2 text-sm text-muted">
                 <li>1 chatbot</li>
-                <li>100 conversations / month</li>
+                <li>100 messages / month</li>
                 <li>Community support</li>
               </ul>
               <Link
@@ -255,19 +223,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-surface-2 bg-ink">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-10 text-xs text-muted sm:flex-row">
-          <span>© {new Date().getFullYear()} Chatbot SaaS</span>
-          <div className="flex gap-6">
-            <Link href="/login" className="hover:text-cloud">
-              Log in
-            </Link>
-            <Link href="/signup" className="hover:text-cloud">
-              Sign up
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }

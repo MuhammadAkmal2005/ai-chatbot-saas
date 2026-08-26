@@ -1,3 +1,7 @@
+// Short-burst anti-spam only (e.g. someone mashing send). Being in-memory
+// and per-serverless-instance is fine for this purpose. The real,
+// authoritative monthly plan limit lives in lib/usage.ts and is backed
+// by the database, so it's correct across deploys and instances.
 const WINDOW_MS = 60_000;
 const MAX_REQUESTS = 20;
 

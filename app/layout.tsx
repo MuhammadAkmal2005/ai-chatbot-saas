@@ -23,9 +23,34 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "AI Chatbot SaaS — the front desk that never clocks out",
-  description: "Add an AI chatbot to your website in 2 minutes and capture more leads while you sleep.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Chatbot SaaS — the front desk that never clocks out",
+    template: "%s",
+  },
+  description:
+    "Add an AI chatbot to your website in 2 minutes and capture more leads while you sleep.",
+  openGraph: {
+    title: "Chatbot SaaS — the front desk that never clocks out",
+    description:
+      "Add an AI chatbot to your website in 2 minutes and capture more leads while you sleep.",
+    url: siteUrl,
+    siteName: "Chatbot SaaS",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Chatbot SaaS — the front desk that never clocks out",
+    description:
+      "Add an AI chatbot to your website in 2 minutes and capture more leads while you sleep.",
+  },
+};
+
+export const viewport = {
+  themeColor: "#0B1120",
 };
 
 export default function RootLayout({

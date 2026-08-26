@@ -1,6 +1,7 @@
 import Groq from "groq-sdk";
 import { jsonResponse, optionsResponse } from "@/lib/api";
 import { isSessionRateLimited } from "@/lib/rate-limit";
+import { FREE_MONTHLY_MESSAGE_LIMIT, getMonthlyMessageCount, getUserPlan } from "@/lib/usage";
 import { createClient } from "@supabase/supabase-js";
 
 const LEAD_BLOCK_REGEX = /<!--LEAD:(\{[\s\S]*?\})-->/;
@@ -50,13 +51,29 @@ export async function POST(request: Request) {
     );
     const { data: chatbot } = await supabase
       .from("chatbots")
-      .select("id, system_prompt")
+      .select("id, user_id, system_prompt")
       .eq("widget_key", widgetKey)
       .eq("is_active", true)
       .maybeSingle();
 
     if (!chatbot) {
       return jsonResponse({ error: "Chatbot not found." }, 404);
+    }
+
+    const plan = await getUserPlan(supabase, chatbot.user_id);
+
+    if (plan === "free") {
+      const monthlyCount = await getMonthlyMessageCount(supabase, chatbot.user_id);
+
+      if (monthlyCount >= FREE_MONTHLY_MESSAGE_LIMIT) {
+        return jsonResponse(
+          {
+            error:
+              "This chatbot has reached its free plan's monthly message limit. Its owner needs to upgrade to Pro for unlimited conversations.",
+          },
+          429
+        );
+      }
     }
 
     const { data: historyRows } = await supabase
