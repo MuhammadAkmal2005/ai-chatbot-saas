@@ -228,10 +228,10 @@ export default function Home() {
                 Start free
               </Link>
             </div>
-            <div className="rounded-xl border border-surface-2 bg-surface p-6 opacity-80">
+            <div className="rounded-xl border border-surface-2 bg-surface p-6">
               <h3 className="font-display text-lg text-cloud">Pro</h3>
               <p className="mt-1 font-display text-3xl text-cloud">
-                Coming soon
+                For growing sites
               </p>
               <ul className="mt-4 space-y-2 text-sm text-muted">
                 <li>Unlimited chatbots</li>
@@ -239,9 +239,15 @@ export default function Home() {
                 <li>Priority support</li>
                 <li>Remove Chatbot SaaS branding</li>
               </ul>
-              <p className="mt-6 text-xs text-muted">
-                Billing is launching soon. Sign up free and we&apos;ll let
-                you know.
+              <Link
+                href="/signup"
+                className="mt-6 inline-block rounded-full border border-surface-2 px-5 py-2.5 text-sm font-medium text-cloud hover:bg-surface-2"
+              >
+                Sign up, then upgrade
+              </Link>
+              <p className="mt-3 text-xs text-muted">
+                Create a free account first — you can upgrade to Pro from
+                Settings.
               </p>
             </div>
           </div>

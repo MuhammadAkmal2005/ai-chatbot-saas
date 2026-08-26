@@ -21,3 +21,14 @@ export type Lead = {
   created_at: string;
   chatbot_name: string;
 };
+
+export type Plan = "free" | "pro";
+
+export type Subscription = {
+  user_id: string;
+  plan: Plan;
+  status: string;
+  lemonsqueezy_customer_id: string | null;
+  lemonsqueezy_subscription_id: string | null;
+  current_period_end: string | null;
+};

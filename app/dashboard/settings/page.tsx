@@ -1,8 +1,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ChangePasswordForm } from "./change-password-form";
+import { UpgradeButton } from "./upgrade-button";
 
-export default async function SettingsPage() {
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: { upgraded?: string };
+}) {
   const supabase = createClient();
   const {
     data: { user },
@@ -12,10 +17,13 @@ export default async function SettingsPage() {
     redirect("/login");
   }
 
-  // No billing yet, so every account is on the Free plan for now.
-  // Once Paddle/Lemon Squeezy is wired up, this will read a real
-  // `plan` column instead of being hardcoded.
-  const plan = "Free";
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("plan, status")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  const plan = subscription?.plan === "pro" ? "Pro" : "Free";
 
   return (
     <div className="max-w-2xl">
@@ -23,6 +31,13 @@ export default async function SettingsPage() {
       <p className="mt-2 text-sm text-muted">
         Manage your account and workspace.
       </p>
+
+      {searchParams.upgraded === "true" && (
+        <p className="mt-6 rounded-xl bg-signal/10 px-4 py-3 text-sm text-signal">
+          Thanks for upgrading! It can take a minute for Pro to activate —
+          refresh this page if it still shows Free.
+        </p>
+      )}
 
       <section className="mt-8 rounded-xl border border-surface-2 bg-surface p-6">
         <h2 className="font-display text-lg text-cloud">Account</h2>
@@ -50,13 +65,22 @@ export default async function SettingsPage() {
         <ChangePasswordForm email={user.email ?? ""} />
       </section>
 
-      <section className="mt-6 rounded-xl border border-dashed border-surface-2 bg-surface/50 p-6">
+      <section className="mt-6 rounded-xl border border-surface-2 bg-surface p-6">
         <h2 className="font-display text-lg text-cloud">Billing</h2>
-        <p className="mt-1 text-sm text-muted">
-          Paid plans and billing management will appear here once Pro
-          launches. You&apos;re on the Free plan and won&apos;t be charged
-          anything until then.
-        </p>
+        {plan === "Pro" ? (
+          <p className="mt-1 text-sm text-muted">
+            You&apos;re on the Pro plan. To cancel or update payment details,
+            use the link in your Lemon Squeezy receipt email.
+          </p>
+        ) : (
+          <>
+            <p className="mt-1 text-sm text-muted">
+              You&apos;re on the Free plan. Upgrade to Pro for unlimited
+              chatbots and conversations.
+            </p>
+            <UpgradeButton userId={user.id} email={user.email ?? ""} />
+          </>
+        )}
       </section>
     </div>
   );
