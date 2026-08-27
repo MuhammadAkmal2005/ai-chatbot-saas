@@ -22,7 +22,7 @@ export function EarlyAccess() {
             Chatbot SaaS is brand new — you&apos;d be one of our first
             customers, not our thousandth. That means direct access to the
             person building it, fast responses to feature requests, and a
-            product that's still shaped by early feedback like yours.
+            product that&apos;s still shaped by early feedback like yours.
           </p>
         </Reveal>
       </div>
