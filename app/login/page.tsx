@@ -5,13 +5,17 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Turnstile } from "@/components/turnstile";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const captchaRequired = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,6 +26,7 @@ export default function LoginPage() {
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
+      options: captchaToken ? { captchaToken } : undefined,
     });
 
     setLoading(false);
@@ -64,9 +69,14 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-cloud">
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="block text-sm font-medium text-cloud">
+                Password
+              </label>
+              <Link href="/forgot-password" className="text-xs font-medium text-amber hover:brightness-110">
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"
@@ -78,6 +88,8 @@ export default function LoginPage() {
             />
           </div>
 
+          <Turnstile onVerify={setCaptchaToken} />
+
           {error && (
             <p className="text-sm text-red-500" role="alert">
               {error}
@@ -86,7 +98,7 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || (captchaRequired && !captchaToken)}
             className="w-full rounded-xl bg-amber-solid px-4 py-2.5 text-sm font-semibold text-ink-solid hover:brightness-95 disabled:opacity-60"
           >
             {loading ? "Signing in..." : "Sign in"}

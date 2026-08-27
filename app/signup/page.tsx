@@ -4,14 +4,20 @@ import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Turnstile } from "@/components/turnstile";
 
 export default function SignupPage() {
+  const [fullName, setFullName] = useState("");
+  const [businessName, setBusinessName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agreed, setAgreed] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const captchaRequired = !!process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,6 +36,11 @@ export default function SignupPage() {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/dashboard`,
+        captchaToken: captchaToken ?? undefined,
+        data: {
+          full_name: fullName,
+          business_name: businessName || null,
+        },
       },
     });
 
@@ -44,7 +55,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center bg-ink px-4 text-cloud">
+    <main className="relative flex min-h-screen items-center justify-center bg-ink px-4 py-10 text-cloud">
       <div className="absolute right-4 top-4">
         <ThemeToggle />
       </div>
@@ -61,6 +72,35 @@ export default function SignupPage() {
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+            <div>
+              <label htmlFor="fullName" className="block text-sm font-medium text-cloud">
+                Full name
+              </label>
+              <input
+                id="fullName"
+                type="text"
+                autoComplete="name"
+                required
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
+                className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-cloud outline-none ring-amber focus:ring-2"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="businessName" className="block text-sm font-medium text-cloud">
+                Business name <span className="text-muted">(optional)</span>
+              </label>
+              <input
+                id="businessName"
+                type="text"
+                autoComplete="organization"
+                value={businessName}
+                onChange={(event) => setBusinessName(event.target.value)}
+                className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-cloud outline-none ring-amber focus:ring-2"
+              />
+            </div>
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-cloud">
                 Email
@@ -113,6 +153,8 @@ export default function SignupPage() {
               </label>
             </div>
 
+            <Turnstile onVerify={setCaptchaToken} />
+
             {error && (
               <p className="text-sm text-red-500" role="alert">
                 {error}
@@ -121,7 +163,7 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={loading || !agreed}
+              disabled={loading || !agreed || (captchaRequired && !captchaToken)}
               className="w-full rounded-xl bg-amber-solid px-4 py-2.5 text-sm font-semibold text-ink-solid hover:brightness-95 disabled:opacity-60"
             >
               {loading ? "Creating account..." : "Sign up"}

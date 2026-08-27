@@ -45,6 +45,20 @@ export default async function SettingsPage({
         <h2 className="font-display text-lg text-cloud">Account</h2>
         <dl className="mt-4 space-y-3 text-sm">
           <div className="flex items-center justify-between">
+            <dt className="text-muted">Name</dt>
+            <dd className="text-cloud">
+              {(user.user_metadata?.full_name as string) || "—"}
+            </dd>
+          </div>
+          {user.user_metadata?.business_name && (
+            <div className="flex items-center justify-between">
+              <dt className="text-muted">Business</dt>
+              <dd className="text-cloud">
+                {user.user_metadata.business_name as string}
+              </dd>
+            </div>
+          )}
+          <div className="flex items-center justify-between">
             <dt className="text-muted">Email</dt>
             <dd className="text-cloud">{user.email}</dd>
           </div>
