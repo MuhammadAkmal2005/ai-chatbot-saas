@@ -1,35 +1,24 @@
 "use client";
 
-import { FormEvent, Suspense, useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-function UpdatePasswordInner() {
+export default function UpdatePasswordPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [verifying, setVerifying] = useState(true);
-  const [verifyError, setVerifyError] = useState<string | null>(null);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [hasSession, setHasSession] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const code = searchParams.get("code");
     const supabase = createClient();
-
-    if (!code) {
-      setVerifyError("This link is invalid or has expired. Request a new one from Settings.");
-      setVerifying(false);
-      return;
-    }
-
-    supabase.auth.exchangeCodeForSession(code).then(({ error: exchangeError }) => {
-      if (exchangeError) {
-        setVerifyError("This link is invalid or has expired. Request a new one from Settings.");
-      }
-      setVerifying(false);
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setHasSession(!!user);
+      setCheckingSession(false);
     });
-  }, [searchParams]);
+  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -55,11 +44,12 @@ function UpdatePasswordInner() {
       <div className="w-full max-w-md rounded-2xl border border-surface-2 bg-surface p-8 shadow-sm">
         <h1 className="font-display text-2xl text-cloud">Set a new password</h1>
 
-        {verifying ? (
-          <p className="mt-4 text-sm text-muted">Verifying your link...</p>
-        ) : verifyError ? (
+        {checkingSession ? (
+          <p className="mt-4 text-sm text-muted">Checking your link...</p>
+        ) : !hasSession ? (
           <p className="mt-4 text-sm text-red-500" role="alert">
-            {verifyError}
+            This link is invalid or has expired. Request a new one from
+            Settings.
           </p>
         ) : (
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -96,13 +86,5 @@ function UpdatePasswordInner() {
         )}
       </div>
     </main>
-  );
-}
-
-export default function UpdatePasswordPage() {
-  return (
-    <Suspense fallback={null}>
-      <UpdatePasswordInner />
-    </Suspense>
   );
 }

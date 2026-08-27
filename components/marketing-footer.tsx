@@ -27,6 +27,11 @@ export function MarketingFooter() {
                 </Link>
               </li>
               <li>
+                <Link href="/#faq" className="text-muted hover:text-cloud">
+                  FAQ
+                </Link>
+              </li>
+              <li>
                 <Link href="/signup" className="text-muted hover:text-cloud">
                   Get Started
                 </Link>

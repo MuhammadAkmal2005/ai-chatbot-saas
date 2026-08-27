@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { createClient } from "@/lib/supabase/server";
 
-export function MarketingHeader() {
+export async function MarketingHeader() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const isLoggedIn = !!user;
+
   return (
     <header className="sticky top-0 z-20 border-b border-surface-2 bg-ink/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -18,21 +25,35 @@ export function MarketingHeader() {
           <Link href="/#pricing" className="hover:text-cloud">
             Pricing
           </Link>
+          <Link href="/#faq" className="hover:text-cloud">
+            FAQ
+          </Link>
           <Link href="/about" className="hover:text-cloud">
             About
           </Link>
         </nav>
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Link href="/login" className="text-sm text-muted hover:text-cloud">
-            Log in
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-full bg-amber-solid px-4 py-2 text-sm font-medium text-ink-solid hover:brightness-95"
-          >
-            Get Started Free
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              href="/dashboard"
+              className="rounded-full bg-amber-solid px-4 py-2 text-sm font-medium text-ink-solid hover:brightness-95"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link href="/login" className="text-sm text-muted hover:text-cloud">
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                className="rounded-full bg-amber-solid px-4 py-2 text-sm font-medium text-ink-solid hover:brightness-95"
+              >
+                Get Started Free
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

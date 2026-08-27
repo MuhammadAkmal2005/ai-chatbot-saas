@@ -8,12 +8,19 @@ import { ThemeToggle } from "@/components/theme-toggle";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!agreed) {
+      setError("Please agree to the Terms of Service and Privacy Policy to continue.");
+      return;
+    }
+
     setError(null);
     setLoading(true);
 
@@ -22,7 +29,7 @@ export default function SignupPage() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/dashboard`,
       },
     });
 
@@ -85,6 +92,27 @@ export default function SignupPage() {
               />
             </div>
 
+            <div className="flex items-start gap-2">
+              <input
+                id="agree"
+                type="checkbox"
+                checked={agreed}
+                onChange={(event) => setAgreed(event.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-surface-2 bg-ink accent-amber-solid"
+              />
+              <label htmlFor="agree" className="text-sm text-muted">
+                I agree to the{" "}
+                <Link href="/terms" target="_blank" className="text-amber hover:brightness-110">
+                  Terms of Service
+                </Link>{" "}
+                and{" "}
+                <Link href="/privacy" target="_blank" className="text-amber hover:brightness-110">
+                  Privacy Policy
+                </Link>
+                .
+              </label>
+            </div>
+
             {error && (
               <p className="text-sm text-red-500" role="alert">
                 {error}
@@ -93,7 +121,7 @@ export default function SignupPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !agreed}
               className="w-full rounded-xl bg-amber-solid px-4 py-2.5 text-sm font-semibold text-ink-solid hover:brightness-95 disabled:opacity-60"
             >
               {loading ? "Creating account..." : "Sign up"}
