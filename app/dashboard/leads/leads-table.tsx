@@ -1,6 +1,7 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Download, Search } from "lucide-react";
 import type { Lead } from "@/lib/types";
 
 type Props = {
@@ -8,9 +9,21 @@ type Props = {
 };
 
 export function LeadsTable({ leads }: Props) {
+  const [query, setQuery] = useState("");
+
+  const filteredLeads = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return leads;
+    return leads.filter((lead) =>
+      [lead.name, lead.email, lead.phone, lead.chatbot_name]
+        .filter(Boolean)
+        .some((field) => field!.toLowerCase().includes(normalized))
+    );
+  }, [leads, query]);
+
   function exportCsv() {
     const header = ["Name", "Email", "Phone", "Chatbot Name", "Date Captured"];
-    const rows = leads.map((lead) => [
+    const rows = filteredLeads.map((lead) => [
       lead.name ?? "",
       lead.email ?? "",
       lead.phone ?? "",
@@ -33,19 +46,31 @@ export function LeadsTable({ leads }: Props) {
 
   return (
     <div className="mt-6 rounded-xl border border-surface-2 bg-surface shadow-sm">
-      <div className="flex items-center justify-between border-b border-surface-2 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-surface-2 px-4 py-3">
         <p className="text-sm text-muted">
-          {leads.length} {leads.length === 1 ? "lead" : "leads"}
+          {filteredLeads.length} of {leads.length} {leads.length === 1 ? "lead" : "leads"}
         </p>
-        <button
-          type="button"
-          onClick={exportCsv}
-          disabled={leads.length === 0}
-          className="inline-flex items-center gap-2 rounded-xl border border-surface-2 px-3 py-1.5 text-sm font-medium text-cloud hover:bg-surface-2 disabled:opacity-50"
-        >
-          <Download className="h-4 w-4" />
-          Export CSV
-        </button>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search leads..."
+              className="w-48 rounded-xl border border-surface-2 bg-ink py-1.5 pl-9 pr-3 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={exportCsv}
+            disabled={filteredLeads.length === 0}
+            className="inline-flex items-center gap-2 rounded-xl border border-surface-2 px-3 py-1.5 text-sm font-medium text-cloud hover:bg-surface-2 disabled:opacity-50"
+          >
+            <Download className="h-4 w-4" />
+            Export CSV
+          </button>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
@@ -59,14 +84,16 @@ export function LeadsTable({ leads }: Props) {
             </tr>
           </thead>
           <tbody>
-            {leads.length === 0 ? (
+            {filteredLeads.length === 0 ? (
               <tr>
                 <td colSpan={5} className="px-4 py-12 text-center text-muted">
-                  No leads captured yet.
+                  {leads.length === 0
+                    ? "No leads captured yet."
+                    : `No leads match "${query}".`}
                 </td>
               </tr>
             ) : (
-              leads.map((lead) => (
+              filteredLeads.map((lead) => (
                 <tr key={lead.id} className="border-t border-surface-2">
                   <td className="px-4 py-3 text-cloud">{lead.name || "—"}</td>
                   <td className="px-4 py-3 text-muted">{lead.email || "—"}</td>

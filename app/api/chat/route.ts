@@ -9,6 +9,9 @@ const LEAD_BLOCK_REGEX = /<!--LEAD:(\{[\s\S]*?\})-->/;
 const LEAD_INSTRUCTION =
   'If the visitor shares their name, email, or phone number, or clearly wants to be contacted, respond naturally AND include a hidden JSON block at the very end of your reply in this exact format: <!--LEAD:{"name":"...","email":"...","phone":"..."}--> using null for any field not provided. Only include this block when you actually have at least one piece of contact info.';
 
+const QUALITY_INSTRUCTION =
+  "Keep replies short and conversational — 2 to 4 sentences unless the visitor explicitly asks for more detail. Only answer using the instructions above and this conversation; if you don't actually know something, say so honestly and offer to collect their contact info instead of guessing or making things up.";
+
 type ChatBody = {
   widgetKey?: string;
   sessionId?: string;
@@ -95,10 +98,13 @@ export async function POST(request: Request) {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     const completion = await groq.chat.completions.create({
       model: "openai/gpt-oss-120b",
+      temperature: 0.5,
+      max_completion_tokens: 400,
+      reasoning_effort: "low",
       messages: [
         {
           role: "system",
-          content: `${chatbot.system_prompt}\n\n${LEAD_INSTRUCTION}`,
+          content: `${chatbot.system_prompt}\n\n${QUALITY_INSTRUCTION}\n\n${LEAD_INSTRUCTION}`,
         },
         ...history,
         { role: "user", content: message },

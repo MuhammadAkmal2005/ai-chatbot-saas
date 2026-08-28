@@ -59,11 +59,19 @@ export default function PrivacyPolicyPage() {
         Each processes data only as needed to provide their service to us.
       </p>
 
-      <h2>Data retention</h2>
+      <h2>Data retention and deletion</h2>
       <p>
         We retain account and chatbot data for as long as your account is
-        active. You can request deletion of your account and associated
-        data at any time by contacting us.
+        active. You can permanently delete your account and all associated
+        chatbots, leads, and chat history at any time from Settings in your
+        dashboard. Deletion is immediate and irreversible.
+      </p>
+      <p>
+        One exception: where we&apos;re legally required to retain certain
+        records — for example, billing and payment records held by our
+        payment processor for tax and fraud-prevention purposes — those
+        records may be retained by that processor per their own obligations,
+        independent of your account with us.
       </p>
 
       <h2>Your rights</h2>

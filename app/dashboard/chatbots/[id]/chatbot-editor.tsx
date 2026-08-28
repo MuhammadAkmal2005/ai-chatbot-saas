@@ -1,19 +1,23 @@
 "use client";
 
 import { FormEvent, useMemo, useState } from "react";
-import { Check, Copy, MessageCircle } from "lucide-react";
+import Link from "next/link";
+import { Check, Copy, Lock, MessageCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Chatbot, ChatbotPosition } from "@/lib/types";
 
 type Props = {
   chatbot: Chatbot;
+  isPro: boolean;
 };
 
-export function ChatbotEditor({ chatbot }: Props) {
+export function ChatbotEditor({ chatbot, isPro }: Props) {
   const [name, setName] = useState(chatbot.name);
   const [welcomeMessage, setWelcomeMessage] = useState(chatbot.welcome_message);
   const [systemPrompt, setSystemPrompt] = useState(chatbot.system_prompt);
   const [primaryColor, setPrimaryColor] = useState(chatbot.primary_color);
+  const [headerColor, setHeaderColor] = useState(chatbot.header_color ?? "");
+  const [avatarUrl, setAvatarUrl] = useState(chatbot.avatar_url ?? "");
   const [position, setPosition] = useState<ChatbotPosition>(chatbot.position);
   const [isActive, setIsActive] = useState(chatbot.is_active);
   const [saving, setSaving] = useState(false);
@@ -37,6 +41,8 @@ export function ChatbotEditor({ chatbot }: Props) {
         welcome_message: welcomeMessage,
         system_prompt: systemPrompt,
         primary_color: primaryColor,
+        header_color: isPro && headerColor ? headerColor : null,
+        avatar_url: isPro && avatarUrl ? avatarUrl : null,
         position,
         is_active: isActive,
       })
@@ -136,6 +142,64 @@ export function ChatbotEditor({ chatbot }: Props) {
         </div>
 
         <div>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="headerColor" className="block text-sm font-medium text-cloud">
+              Header Color
+            </label>
+            {!isPro && <Lock className="h-3.5 w-3.5 text-muted" />}
+          </div>
+          <p className="text-xs text-muted">
+            Optional — a different color for the header bar and launcher
+            button, separate from the message bubble color above.
+          </p>
+          {isPro ? (
+            <div className="mt-1 flex items-center gap-3">
+              <input
+                type="color"
+                value={normalizeHex(headerColor || primaryColor)}
+                onChange={(event) => setHeaderColor(event.target.value)}
+                className="h-10 w-14 cursor-pointer rounded-xl border border-surface-2 bg-surface p-1"
+              />
+              <input
+                id="headerColor"
+                type="text"
+                placeholder="Same as primary color"
+                value={headerColor}
+                onChange={(event) => setHeaderColor(event.target.value)}
+                className="w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
+              />
+            </div>
+          ) : (
+            <ProUpsellField placeholder="e.g. #0B1120" />
+          )}
+        </div>
+
+        <div>
+          <div className="flex items-center gap-1.5">
+            <label htmlFor="avatarUrl" className="block text-sm font-medium text-cloud">
+              Logo / Avatar URL
+            </label>
+            {!isPro && <Lock className="h-3.5 w-3.5 text-muted" />}
+          </div>
+          <p className="text-xs text-muted">
+            Optional — a small logo shown in the widget header and launcher
+            button instead of the default icon.
+          </p>
+          {isPro ? (
+            <input
+              id="avatarUrl"
+              type="url"
+              placeholder="https://yoursite.com/logo.png"
+              value={avatarUrl}
+              onChange={(event) => setAvatarUrl(event.target.value)}
+              className="mt-1 w-full rounded-xl border border-surface-2 bg-ink px-3 py-2 text-sm text-cloud outline-none focus:ring-2 focus:ring-amber"
+            />
+          ) : (
+            <ProUpsellField placeholder="https://yoursite.com/logo.png" />
+          )}
+        </div>
+
+        <div>
           <label htmlFor="position" className="block text-sm font-medium text-cloud">
             Position
           </label>
@@ -209,9 +273,16 @@ export function ChatbotEditor({ chatbot }: Props) {
             <div className={`flex min-h-[420px] flex-col justify-end p-4 ${previewAlign}`}>
               <div className="mb-3 w-full max-w-[280px] overflow-hidden rounded-xl bg-white shadow-sm">
                 <div
-                  className="px-4 py-3 text-sm font-semibold"
-                  style={{ backgroundColor: primaryColor, color: contrastText }}
+                  className="flex items-center gap-2 px-4 py-3 text-sm font-semibold"
+                  style={{
+                    backgroundColor: (isPro && headerColor) || primaryColor,
+                    color: contrastText,
+                  }}
                 >
+                  {isPro && avatarUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={avatarUrl} alt="" className="h-5 w-5 rounded-full object-cover" />
+                  )}
                   {name || "Chatbot"}
                 </div>
                 <div className="p-4">
@@ -226,10 +297,18 @@ export function ChatbotEditor({ chatbot }: Props) {
               <button
                 type="button"
                 aria-label="Chat bubble preview"
-                className="flex h-14 w-14 items-center justify-center rounded-full shadow-md"
-                style={{ backgroundColor: primaryColor, color: contrastText }}
+                className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-full shadow-md"
+                style={{
+                  backgroundColor: (isPro && headerColor) || primaryColor,
+                  color: contrastText,
+                }}
               >
-                <MessageCircle className="h-6 w-6" />
+                {isPro && avatarUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  <MessageCircle className="h-6 w-6" />
+                )}
               </button>
             </div>
           </div>
@@ -255,6 +334,25 @@ export function ChatbotEditor({ chatbot }: Props) {
           </p>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ProUpsellField({ placeholder }: { placeholder: string }) {
+  return (
+    <div className="relative mt-1">
+      <input
+        type="text"
+        disabled
+        placeholder={placeholder}
+        className="w-full cursor-not-allowed rounded-xl border border-surface-2 bg-surface-2/50 px-3 py-2 text-sm text-muted outline-none"
+      />
+      <Link
+        href="/dashboard/settings"
+        className="absolute inset-y-0 right-2 flex items-center text-xs font-medium text-amber hover:brightness-110"
+      >
+        Upgrade to Pro
+      </Link>
     </div>
   );
 }

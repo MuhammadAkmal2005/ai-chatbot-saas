@@ -7,6 +7,8 @@ export type Chatbot = {
   welcome_message: string;
   system_prompt: string;
   primary_color: string;
+  header_color: string | null;
+  avatar_url: string | null;
   position: ChatbotPosition;
   is_active: boolean;
   widget_key: string;

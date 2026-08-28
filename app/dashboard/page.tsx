@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Bot } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import type { Chatbot } from "@/lib/types";
 import { createChatbot } from "./actions";
 import { CreateChatbotButton } from "./create-chatbot-button";
+import { ChatbotsList } from "./chatbots-list";
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -56,33 +56,7 @@ export default async function DashboardPage() {
           </form>
         </div>
       ) : (
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {chatbots.map((chatbot) => (
-            <li
-              key={chatbot.id}
-              className="rounded-xl border border-surface-2 bg-surface p-5 shadow-sm"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <h2 className="font-display text-cloud">{chatbot.name}</h2>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    chatbot.is_active
-                      ? "bg-signal/10 text-signal"
-                      : "bg-surface-2 text-muted"
-                  }`}
-                >
-                  {chatbot.is_active ? "Active" : "Inactive"}
-                </span>
-              </div>
-              <Link
-                href={`/dashboard/chatbots/${chatbot.id}`}
-                className="mt-4 inline-flex text-sm font-medium text-amber hover:brightness-110"
-              >
-                Manage
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <ChatbotsList chatbots={chatbots} />
       )}
     </div>
   );

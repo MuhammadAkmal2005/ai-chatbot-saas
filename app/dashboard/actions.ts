@@ -35,3 +35,34 @@ export async function createChatbot() {
 
   redirect(`/dashboard/chatbots/${data.id}`);
 }
+
+export async function deleteChatbot(chatbotId: string) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  // Verify ownership before deleting anything.
+  const { data: chatbot } = await supabase
+    .from("chatbots")
+    .select("id")
+    .eq("id", chatbotId)
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!chatbot) {
+    throw new Error("Chatbot not found.");
+  }
+
+  // Clean up dependent rows explicitly rather than relying on foreign
+  // key cascade being configured correctly in the database.
+  await supabase.from("chat_logs").delete().eq("chatbot_id", chatbotId);
+  await supabase.from("leads").delete().eq("chatbot_id", chatbotId);
+  await supabase.from("chatbots").delete().eq("id", chatbotId);
+
+  redirect("/dashboard");
+}

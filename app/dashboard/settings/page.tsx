@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { FREE_MONTHLY_MESSAGE_LIMIT, getMonthlyMessageCount } from "@/lib/usage";
 import { ChangePasswordForm } from "./change-password-form";
 import { UpgradeButton } from "./upgrade-button";
+import { DeleteAccountButton } from "./delete-account-button";
 
 export default async function SettingsPage({
   searchParams,
@@ -128,6 +129,16 @@ export default async function SettingsPage({
             <UpgradeButton userId={user.id} email={user.email ?? ""} />
           </>
         )}
+      </section>
+
+      <section className="mt-6 rounded-xl border border-red-500/20 bg-surface p-6">
+        <h2 className="font-display text-lg text-red-500">Danger Zone</h2>
+        <p className="mt-1 text-sm text-muted">
+          Permanently delete your account and all associated data.
+        </p>
+        <div className="mt-4">
+          <DeleteAccountButton />
+        </div>
       </section>
     </div>
   );

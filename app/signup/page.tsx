@@ -61,7 +61,10 @@ export default function SignupPage() {
       </div>
 
       <div className="w-full max-w-md rounded-2xl border border-surface-2 bg-surface p-8 shadow-sm">
-        <h1 className="font-display text-2xl text-cloud">Create an account</h1>
+        <Link href="/" className="text-sm text-muted hover:text-cloud">
+          ← Back to home
+        </Link>
+        <h1 className="mt-4 font-display text-2xl text-cloud">Create an account</h1>
         <p className="mt-2 text-sm text-muted">
           Start adding an AI chatbot to your website for free.
         </p>

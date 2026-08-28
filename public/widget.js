@@ -18,9 +18,12 @@
   style.textContent = `
     .aicb-root{all:initial;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
     .aicb-root *{box-sizing:border-box;font-family:inherit;}
-    .aicb-launcher{position:fixed;z-index:2147483000;width:56px;height:56px;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,23,42,.18);transition:transform .2s ease,box-shadow .2s ease;}
+    .aicb-launcher{position:fixed;z-index:2147483000;width:56px;height:56px;border:0;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(15,23,42,.18);opacity:0;pointer-events:none;transition:opacity .25s ease,transform .2s ease,box-shadow .2s ease;}
+    .aicb-launcher.aicb-ready{opacity:1;pointer-events:auto;}
     .aicb-launcher:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(15,23,42,.22);}
     .aicb-launcher svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+    .aicb-launcher img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+    .aicb-avatar{width:22px;height:22px;border-radius:50%;object-fit:cover;display:none;}
     .aicb-window{position:fixed;z-index:2147483000;width:360px;height:500px;max-width:calc(100vw - 32px);max-height:calc(100vh - 112px);background:#fff;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 18px 50px rgba(15,23,42,.22);opacity:0;transform:translateY(12px) scale(.96);pointer-events:none;visibility:hidden;transition:opacity .2s ease,transform .2s ease,visibility .2s ease;}
     .aicb-window.aicb-open{opacity:1;transform:none;pointer-events:auto;visibility:visible;}
     .aicb-header{padding:14px 16px;color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
@@ -56,6 +59,7 @@
   launcher.setAttribute("aria-label", "Open chat");
   launcher.innerHTML =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>';
+  const defaultLauncherIcon = launcher.innerHTML;
 
   const windowEl = document.createElement("div");
   windowEl.className = "aicb-window";
@@ -64,6 +68,9 @@
 
   const header = document.createElement("div");
   header.className = "aicb-header";
+  const avatarImg = document.createElement("img");
+  avatarImg.className = "aicb-avatar";
+  avatarImg.alt = "";
   const title = document.createElement("span");
   title.textContent = "Chat";
   const closeBtn = document.createElement("button");
@@ -71,7 +78,11 @@
   closeBtn.className = "aicb-close";
   closeBtn.setAttribute("aria-label", "Close chat");
   closeBtn.textContent = "×";
-  header.append(title, closeBtn);
+  header.append(avatarImg, title, closeBtn);
+  header.style.display = "flex";
+  header.style.alignItems = "center";
+  header.style.gap = "8px";
+  title.style.flex = "1";
 
   const messages = document.createElement("div");
   messages.className = "aicb-messages";
@@ -104,18 +115,35 @@
     return (r * 299 + g * 587 + b * 114) / 1000 > 160 ? "#0f172a" : "#ffffff";
   };
 
-  const applyTheme = (color, position) => {
+  const applyTheme = (color, position, headerColor) => {
     primaryColor = color || "#4f46e5";
+    const headerBg = headerColor || primaryColor;
     const text = contrastColor(primaryColor);
-    launcher.style.background = primaryColor;
-    launcher.style.color = text;
-    header.style.background = primaryColor;
-    header.style.color = text;
-    closeBtn.style.color = text;
+    const headerText = contrastColor(headerBg);
+    launcher.style.background = headerBg;
+    launcher.style.color = headerText;
+    header.style.background = headerBg;
+    header.style.color = headerText;
+    closeBtn.style.color = headerText;
     sendBtn.style.background = primaryColor;
     sendBtn.style.color = text;
     root.classList.remove("aicb-pos-right", "aicb-pos-left");
     root.classList.add(position === "bottom-left" ? "aicb-pos-left" : "aicb-pos-right");
+  };
+
+  const applyAvatar = (avatarUrl) => {
+    if (!avatarUrl) {
+      avatarImg.style.display = "none";
+      launcher.innerHTML = defaultLauncherIcon;
+      return;
+    }
+    avatarImg.src = avatarUrl;
+    avatarImg.style.display = "block";
+    launcher.innerHTML = "";
+    const launcherImg = document.createElement("img");
+    launcherImg.src = avatarUrl;
+    launcherImg.alt = "";
+    launcher.appendChild(launcherImg);
   };
 
   applyTheme(primaryColor, "bottom-right");
@@ -202,10 +230,13 @@
     })
     .then((config) => {
       title.textContent = config.name || "Chat";
-      applyTheme(config.primary_color, config.position);
+      applyTheme(config.primary_color, config.position, config.header_color);
+      applyAvatar(config.avatar_url);
       if (config.welcome_message) addBubble(config.welcome_message, "bot");
+      launcher.classList.add("aicb-ready");
     })
     .catch(() => {
       applyTheme("#4f46e5", "bottom-right");
+      launcher.classList.add("aicb-ready");
     });
 })();

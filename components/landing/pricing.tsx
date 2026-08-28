@@ -46,6 +46,7 @@ export function Pricing() {
               <ul className="mt-4 space-y-2 text-sm text-muted">
                 <li>Unlimited chatbots</li>
                 <li>Unlimited conversations</li>
+                <li>Custom widget branding (colors, logo)</li>
                 <li>Priority support</li>
                 <li>Remove Chatbot SaaS branding</li>
               </ul>

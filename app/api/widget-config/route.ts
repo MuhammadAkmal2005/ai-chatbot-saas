@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const supabase = createClient();
     const { data: chatbot } = await supabase
       .from("chatbots")
-      .select("name, welcome_message, primary_color, position")
+      .select("name, welcome_message, primary_color, header_color, avatar_url, position")
       .eq("widget_key", widgetKey)
       .eq("is_active", true)
       .maybeSingle();
@@ -29,6 +29,8 @@ export async function GET(request: Request) {
       name: chatbot.name,
       welcome_message: chatbot.welcome_message,
       primary_color: chatbot.primary_color,
+      header_color: chatbot.header_color,
+      avatar_url: chatbot.avatar_url,
       position: chatbot.position,
     });
   } catch {
