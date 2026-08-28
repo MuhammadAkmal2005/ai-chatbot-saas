@@ -18,7 +18,7 @@ export async function POST() {
     .eq("user_id", user.id)
     .maybeSingle();
 
-  // We don't have a Lemon Squeezy cancellation API wired up yet — only
+  // We don't have a Paddle cancellation API wired up yet — only
   // the webhook that reacts to cancellations. Deleting the account while
   // a paid subscription is still active would leave billing running with
   // no account left to manage it from. Block until it's cancelled first.
@@ -26,7 +26,7 @@ export async function POST() {
     return NextResponse.json(
       {
         error:
-          "You have an active Pro subscription. Cancel it first from your Lemon Squeezy receipt email, then come back to delete your account.",
+          "You have an active Pro subscription. Cancel it first from your Paddle receipt email, then come back to delete your account.",
       },
       { status: 400 }
     );

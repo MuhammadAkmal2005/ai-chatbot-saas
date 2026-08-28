@@ -42,7 +42,7 @@ export default function RefundPolicyPage() {
 
       <h2>How refunds are processed</h2>
       <p>
-        Refunds are issued by Lemon Squeezy, our payment processor, back
+        Refunds are issued by Paddle, our payment processor, back
         to your original payment method. Processing time depends on your
         bank or card provider, typically 5–10 business days.
       </p>

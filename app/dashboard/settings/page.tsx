@@ -118,7 +118,7 @@ export default async function SettingsPage({
         {plan === "Pro" ? (
           <p className="mt-1 text-sm text-muted">
             You&apos;re on the Pro plan. To cancel or update payment details,
-            use the link in your Lemon Squeezy receipt email.
+            use the link in your Paddle receipt email.
           </p>
         ) : (
           <>

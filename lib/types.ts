@@ -32,5 +32,7 @@ export type Subscription = {
   status: string;
   lemonsqueezy_customer_id: string | null;
   lemonsqueezy_subscription_id: string | null;
+  paddle_customer_id: string | null;
+  paddle_subscription_id: string | null;
   current_period_end: string | null;
 };

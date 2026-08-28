@@ -80,7 +80,7 @@ export function MarketingFooter() {
         </div>
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-surface-2 pt-6 text-xs text-muted sm:flex-row">
           <span>© {new Date().getFullYear()} Chatbot SaaS. All rights reserved.</span>
-          <span>Payments securely processed by Lemon Squeezy.</span>
+          <span>Payments securely processed by Paddle.</span>
         </div>
       </div>
     </footer>

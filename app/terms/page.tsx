@@ -25,8 +25,8 @@ export default function TermsPage() {
       <p>
         The Free plan includes limited monthly usage as described on our
         pricing page. Paid Pro subscriptions are billed on a recurring
-        basis and processed by Lemon Squeezy, acting as merchant of
-        record. Lemon Squeezy&apos;s own terms also apply to your payment.
+        basis and processed by Paddle, acting as merchant of
+        record. Paddle&apos;s own terms also apply to your payment.
         Subscriptions renew automatically until cancelled; you can cancel
         anytime and retain access until the end of the paid period.
       </p>

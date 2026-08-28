@@ -38,7 +38,7 @@ export default function PrivacyPolicyPage() {
       </p>
       <p>
         <strong>Payment data:</strong> we do not process or store your card
-        details ourselves. Payments are handled entirely by Lemon Squeezy,
+        details ourselves. Payments are handled entirely by Paddle,
         our payment processor and merchant of record. Review their{" "}
         privacy policy for details on how they handle payment information.
       </p>
@@ -55,7 +55,7 @@ export default function PrivacyPolicyPage() {
       <p>
         We rely on a small number of trusted providers to run the service:
         Supabase (database and authentication), Groq (AI processing of
-        chat messages), Vercel (hosting), and Lemon Squeezy (payments).
+        chat messages), Vercel (hosting), and Paddle (payments).
         Each processes data only as needed to provide their service to us.
       </p>
 
